@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Birthday Card - Happy Birthday Sava!</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Comic Sans MS", "Comic Sans", cursive;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            position: absolute;
+            transition: all 0.5s ease;
+            background: linear-gradient(135deg, #f5d5d8 0%, #ffe4d6 50%, #fff0e6 100%);
+        }
+
+        .active { 
+            display: flex; 
+            z-index: 10;
+        }
+
+        /* Decorative capybaras scattered */
+        .capy-scatter {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            opacity: 0.85;
+            animation: float-scatter 3s ease-in-out infinite;
+            mix-blend-mode: multiply;
+            background: transparent;
+        }
+
+        @keyframes float-scatter {
+            0%, 100% { transform: translateY(0px) rotate(-5deg); }
+            50% { transform: translateY(-12px) rotate(5deg); }
+        }
+
+        @keyframes float-scatter-reverse {
+            0%, 100% { transform: translateY(0px) rotate(5deg); }
+            50% { transform: translateY(-12px) rotate(-5deg); }
+        }
+
+        .capy-scatter.capy1 {
+            top: 8%;
+            left: 6%;
+            width: 55px;
+            animation: float-scatter 3.5s ease-in-out infinite;
+        }
+
+        .capy-scatter.capy2 {
+            top: 12%;
+            right: 7%;
+            width: 48px;
+            animation: float-scatter-reverse 3.8s ease-in-out infinite;
+        }
+
+        .capy-scatter.capy3 {
+            bottom: 10%;
+            left: 8%;
+            width: 52px;
+            animation: float-scatter 4s ease-in-out infinite;
+        }
+
+        .capy-scatter.capy4 {
+            bottom: 14%;
+            right: 6%;
+            width: 50px;
+            animation: float-scatter-reverse 3.6s ease-in-out infinite;
+        }
+
+        /* Center capybara for page 1 */
+        .capy-center {
+            position: relative;
+            width: 120px;
+            margin: 10px 0;
+            mix-blend-mode: multiply;
+            animation: bounce 1.5s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Page 1 - Initial */
+        #page1 {
+            background: linear-gradient(135deg, #f5d5d8 0%, #ffe4d6 50%, #fff0e6 100%);
+        }
+
+        #page1 h2 {
+            font-size: 32px;
+            color: #333;
+            margin: 0 0 20px 0;
+            font-weight: bold;
+        }
+
+        .box {
+            border: 3px solid #333;
+            padding: 30px 25px;
+            background: rgba(255, 250, 240, 0.95);
+            border-radius: 15px;
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+            animation: float 2s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .box p {
+            font-size: 20px;
+            color: #333;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .box img {
+            max-width: 120px;
+            margin: 10px 0;
+            background: transparent;
+            mix-blend-mode: multiply;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #5DADE2, #2E86C1);
+            color: white;
+            border: 2px solid #333;
+            padding: 10px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: transform 0.2s;
+            box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #EC7063, #C0392B);
+            color: white;
+            border: 2px solid #333;
+            padding: 10px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: transform 0.2s;
+            box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-no:hover {
+            transform: scale(1.05);
+        }
+
+        /* No Page */
+        #noPage {
+            background: linear-gradient(135deg, #f5d5d8 0%, #ffe4d6 50%, #fff0e6 100%);
+        }
+
+        #noPage img {
+            max-width: 150px;
+            margin-bottom: 20px;
+            mix-blend-mode: multiply;
+            background: transparent;
+        }
+
+        #noPage p {
+            font-size: 24px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Page 2 - PIN */
+        #page2 {
+            background: linear-gradient(135deg, #f5d5d8 0%, #ffe4d6 50%, #fff0e6 100%);
+        }
+
+        .capy-decor {
+            position: absolute;
+            width: 70px;
+            height: auto;
+            opacity: 0.9;
+            animation: sway 3s ease-in-out infinite;
+            mix-blend-mode: multiply;
+            background: transparent;
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: translateX(0) rotate(-5deg); }
+            50% { transform: translateX(10px) rotate(5deg); }
+        }
+
+        .capy-decor.left {
+            top: 20px;
+            left: 20px;
+        }
+
+        .capy-decor.right {
+            bottom: 20px;
+            right: 20px;
+            animation: sway-reverse 3s ease-in-out infinite;
+        }
+
+        @keyframes sway-reverse {
+            0%, 100% { transform: translateX(0) rotate(5deg); }
+            50% { transform: translateX(-10px) rotate(-5deg); }
+        }
+            position: relative;
+            z-index: 5;
+            background: rgba(255, 250, 240, 0.95);
+            padding: 30px 40px;
+            border: 3px solid #333;
+            border-radius: 15px;
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        #page2 h3 {
+            font-size: 24px;
+            color: #333;
+            margin: 0 0 10px 0;
+            font-weight: bold;
+        }
+
+        .pin-display-label {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #333;
+            padding: 8px 16px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .pin-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .pin-btn {
+            width: 60px;
+            height: 60px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 50%;
+            border: 2px solid #333;
+            background: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            color: #333;
+            transition: all 0.2s;
+            box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .pin-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.15);
+        }
+
+        .pin-btn:active {
+            transform: translateY(0px);
+        }
+
+        #pin-display {
+            font-size: 28px;
+            letter-spacing: 8px;
+            margin-bottom: 15px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 8px 15px;
+            color: #333;
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #pin-status {
+            color: #C0392B;
+            font-weight: bold;
+            margin-bottom: 15px;
+            height: 1.5em;
+            font-size: 16px;
+        }
+
+        /* Page 3 - Letter */
+        #page3 {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #b8e6d5 100%);
+        }
+
+        .letter-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .letter-container {
+            position: relative;
+            cursor: pointer;
+            z-index: 5;
+        }
+
+        .letter-container img {
+            max-width: 180px;
+            width: 180px;
+            height: auto;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            transition: transform 0.2s;
+        }
+
+        .letter-container img:hover {
+            transform: scale(1.05);
+        }
+
+        .letter-container svg {
+            max-width: 180px;
+            width: 180px;
+            height: auto;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .letter-container svg:hover {
+            transform: scale(1.05);
+        }
+
+        .letter-container p {
+            color: #2c3e50;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        #letter-content {
+            display: none;
+            background: #fffef0;
+            padding: 40px;
+            border: 3px solid #8b7355;
+            max-width: 85%;
+            max-height: 70vh;
+            overflow-y: auto;
+            text-align: left;
+            font-size: 14px;
+            white-space: pre-wrap;
+            border-radius: 5px;
+            color: #2c3e50;
+            position: relative;
+            z-index: 6;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            line-height: 1.6;
+        }
+
+        .btn-back-letter {
+            display: none;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 7;
+            padding: 8px 16px;
+            border-radius: 5px;
+            border: none;
+            background: #2c3e50;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .btn-back-letter:hover {
+            background: #1a252f;
+            transform: translateY(-2px);
+        }
+
+        /* Page 4 - Cake */
+        #page4 {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #b8e6d5 100%);
+        }
+
+        .cake-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #cake {
+            width: 280px;
+            cursor: pointer;
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+            transition: transform 0.2s;
+        }
+
+        #cake:hover {
+            transform: scale(1.05);
+        }
+
+        #cake.blown {
+            filter: grayscale(80%) brightness(0.7) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+        }
+
+        #cake.blown #flame {
+            opacity: 0;
+        }
+
+        #page4 p {
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Page 5 - End */
+        #page5 {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #b8e6d5 100%);
+        }
+
+        #page5 h1 {
+            font-size: 48px;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Navigation Buttons */
+        .next-btn {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            cursor: pointer;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, #2c3e50, #1a252f);
+            color: white;
+            font-weight: bold;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .home-btn {
+            padding: 12px 24px;
+            cursor: pointer;
+            margin-top: 30px;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, #2c3e50, #1a252f);
+            color: white;
+            font-weight: bold;
+            transition: all 0.2s;
+            font-size: 16px;
+        }
+
+        .home-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .general-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, #2c3e50, #1a252f);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .general-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Scrollbar styling for letter */
+        #letter-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #letter-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        #letter-content::-webkit-scrollbar-thumb {
+            background: #2c3e50;
+            border-radius: 10px;
+        }
+
+        #letter-content::-webkit-scrollbar-thumb:hover {
+            background: #1a252f;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music - "Seasons" by Wave to Earth -->
+    <audio id="bgMusic" autoplay loop>
+        <source src="wave to earth - seasons.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Page 1 - Initial Question -->
+    <div id="page1" class="page active">
+        <div class="box">
+            <img class="capy-center" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara">
+            <p>Apakah kamu penasaran?</p>
+            <div class="btn-container">
+                <button class="btn-yes" onclick="playMusic(); goToPage(2)">YES</button>
+                <button class="btn-no" onclick="goToPage('noPage')">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Page - Sad Capybara -->
+    <div id="noPage" class="page">
+        <img class="capy-scatter capy1" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara" style="width: 45px;">
+        <img class="capy-scatter capy4" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara" style="width: 50px;">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaG56eXJoMGNrZGM0YmJiYWh0ZGwxNWF1cnI5b3N5cDF2MHVpMHY2biZlcD12MV9naWZzX3NlYXJjaCZjdD1n/lGBecpB2dIMwt6ohfI/giphy.gif" alt="Gift">
+        <p>Yahh kok NO... 😢</p>
+        <button class="general-btn" onclick="goToPage(1)">Back</button>
+    </div>
+
+    <!-- Page 2 - PIN Password -->
+    <div id="page2" class="page">
+        <img class="capy-scatter capy1" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara">
+        <img class="capy-scatter capy2" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara">
+        <img class="capy-scatter capy3" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara">
+        <img class="capy-scatter capy4" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara">
+        
+        <div class="page2-content">
+            <h3>Masukkan PIN:</h3>
+            <div id="pin-display"></div>
+            <div id="pin-status"></div>
+            <div class="pin-grid">
+                <button class="pin-btn" onclick="pressPin(1)">1</button>
+                <button class="pin-btn" onclick="pressPin(2)">2</button>
+                <button class="pin-btn" onclick="pressPin(3)">3</button>
+                <button class="pin-btn" onclick="pressPin(4)">4</button>
+                <button class="pin-btn" onclick="pressPin(5)">5</button>
+                <button class="pin-btn" onclick="pressPin(6)">6</button>
+                <button class="pin-btn" onclick="pressPin(7)">7</button>
+                <button class="pin-btn" onclick="pressPin(8)">8</button>
+                <button class="pin-btn" onclick="pressPin(9)">9</button>
+                <div style="grid-column: 2"><button class="pin-btn" onclick="pressPin(0)">0</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 3 - Letter -->
+    <div id="page3" class="page">
+        <img class="capy-scatter capy2" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara" style="width: 45px;">
+        <img class="capy-scatter capy4" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara" style="width: 50px;">
+        <button class="btn-back-letter" id="backLetter" onclick="closeLetter()">← Back</button>
+        <div id="envelope" class="letter-container" onclick="openLetter()">
+            <svg width="180" height="140" viewBox="0 0 200 150" style="filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2)); transition: transform 0.2s;" class="envelope-svg">
+                <!-- Envelope body -->
+                <rect x="20" y="40" width="160" height="100" fill="#fffef0" stroke="#8b7355" stroke-width="2" rx="3"/>
+                <!-- Envelope flap -->
+                <polygon points="20,40 100,95 180,40" fill="#f5f1e8" stroke="#8b7355" stroke-width="2"/>
+                <!-- Envelope flap line -->
+                <line x1="20" y1="40" x2="100" y2="95" stroke="#8b7355" stroke-width="1.5"/>
+                <line x1="180" y1="40" x2="100" y2="95" stroke="#8b7355" stroke-width="1.5"/>
+                <!-- Heart decoration -->
+                <text x="100" y="130" font-size="24" text-anchor="middle" fill="#ff69b4">❤️</text>
+            </svg>
+            <p>Klik untuk buka surat ❤️</p>
+        </div>
+        <div id="letter-content">HOY SAVA SELAMAT ULANG TAHUN YAH!!! 😝👈🏻 smoga smugi sehat selalu........ HOPE MALANG HOLDS YOU! selalu bahagia (hrs) walau hidup kadang di atas dan kadang juga ngelaprak 🥀 , smuga semua yg km harapkan di dunya yg hidup sekali ini... bs terealisasikan smua alias dikabulkan Allah AAMIIN, panjang umur, sehat selalu, sehat lagi dan sehat alhamdulillah, sukses👍🏻 TEKON JAYA JAYA JAYA!!! intinya kacamata: have a great day, get a lot a gifts or cakes or foods or happiness or KIW KIW KIW🤤🥶🙏🏻, di kelilingi org-orang baik who love dan care about you (EKHEM), do anything that makes you happy, i hope you enjoy yourself di hari ulang tahun mu ini, dan i hope u hope jhope hidup mu penuh with FUN and JOY red velvet. Km deserve mendapatkan semua hal baik di dunya ini, orang baik imyut tekon🌹.
+
+Jujur ak minta maaf karena komunikasi ak SEJELEK ITU 😞 it doesnt mean ak melupakan mu yah bro🥀💔 ak rasa kyk i wasnt doing enough tuk mnjdi teman mu, tapi ak senang kalau km masih menganggapku sbagai teman 🧈  km one of my best best best friend, kyknya kalau ada ranking, km masuk 5 besar bahkan 3 besar sebagai teman yg benar-benar teman untuk ak. Kalau sm km ak merasa jadi diri sendiri krna km memberi ak ruang nyaman dan aman tuk mengekspresikan diri ak 🥺👉🏻👈🏻 (geuleuh). Jangan jauhi ak 🥀 jangan lupakan ak 🥀 jangan tinggalkan ak 🥀 jangan buang ak🥀 lupakan ak kalau ak jahat aj, mungkin kalau terkuak ak anak mafia. ak harap reza arap our friendship long lasting kayak maskara nyak.....</div>
+        <button class="next-btn" onclick="goToPage(4)">Next</button>
+    </div>
+
+    <!-- Page 4 - Birthday Cake -->
+    <div id="page4" class="page">
+        <img class="capy-scatter capy1" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara" style="width: 45px;">
+        <img class="capy-scatter capy4" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara" style="width: 50px;">
+        <canvas id="confetti-canvas"></canvas>
+        <div class="cake-content">
+            <svg id="cake" width="280" height="300" viewBox="0 0 280 300" onclick="blowCandle()" style="cursor: pointer; filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15)); transition: transform 0.2s;">
+                <!-- Cake base - bottom layer -->
+                <rect x="40" y="180" width="200" height="80" fill="#D2691E" rx="5"/>
+                <!-- Cake frosting bottom -->
+                <ellipse cx="140" cy="180" rx="100" ry="20" fill="#8B4513"/>
+                
+                <!-- Cake middle layer -->
+                <rect x="50" y="120" width="180" height="70" fill="#CD853F" rx="5"/>
+                <!-- Cake frosting middle -->
+                <ellipse cx="140" cy="120" rx="90" ry="18" fill="#A0522D"/>
+                
+                <!-- Cake top layer -->
+                <rect x="60" y="70" width="160" height="60" fill="#DEB887" rx="5"/>
+                <!-- Cake frosting top -->
+                <ellipse cx="140" cy="70" rx="80" ry="16" fill="#CD853F"/>
+                
+                <!-- Cream/frosting decoration top -->
+                <circle cx="110" cy="60" r="15" fill="#F5DEB3" opacity="0.8"/>
+                <circle cx="170" cy="60" r="15" fill="#F5DEB3" opacity="0.8"/>
+                <circle cx="140" cy="50" r="12" fill="#FFE4B5"/>
+                
+                <!-- Candle stick -->
+                <rect x="135" y="20" width="10" height="50" fill="#FFFACD" stroke="#DAA520" stroke-width="1"/>
+                
+                <!-- Candle flame (will change with blown effect) -->
+                <g id="flame">
+                    <ellipse cx="140" cy="18" rx="8" ry="12" fill="#FF6347"/>
+                    <ellipse cx="138" cy="12" rx="5" ry="8" fill="#FFD700"/>
+                    <ellipse cx="142" cy="14" rx="4" ry="6" fill="#FFFF00"/>
+                </g>
+                
+                <!-- Decorative sprinkles -->
+                <circle cx="80" cy="140" r="4" fill="#FF69B4"/>
+                <circle cx="200" cy="150" r="4" fill="#FF1493"/>
+                <circle cx="100" cy="180" r="3" fill="#FFB6C1"/>
+                <circle cx="180" cy="200" r="3" fill="#FFC0CB"/>
+                <circle cx="70" cy="220" r="3" fill="#FF69B4"/>
+                <circle cx="210" cy="240" r="3" fill="#FF1493"/>
+            </svg>
+            <p>Klik lilinnya untuk tiup! 🎂</p>
+        </div>
+        <button class="next-btn" onclick="goToPage(5)">Next</button>
+    </div>
+
+    <!-- Page 5 - Final Message -->
+    <div id="page5" class="page">
+        <img class="capy-scatter capy1" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara" style="width: 45px;">
+        <img class="capy-scatter capy2" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara" style="width: 45px;">
+        <img class="capy-scatter capy3" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara" style="width: 55px;">
+        <img class="capy-scatter capy4" src="gambar_capybara/WhatsApp Image 2026-04-29 at 1.26.20 PM.jpeg" alt="Capybara" style="width: 50px;">
+        <h1>Enjoy your best day, Savah 🎉</h1>
+        <button class="home-btn" onclick="goToPage(1)">Kembali ke Home</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        let currentPin = "";
+        const targetPin = "2904";
+        let hasBlownCandle = false;
+
+        function goToPage(pageNum) {
+            if (pageNum === 3) {
+                if (currentPin !== targetPin) {
+                    return; // Don't navigate if PIN is wrong
+                }
+            }
+
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            if(pageNum === 'noPage') {
+                document.getElementById('noPage').classList.add('active');
+            } else {
+                document.getElementById('page' + pageNum).classList.add('active');
+            }
+            if(pageNum === 1) resetAll();
+        }
+
+        function playMusic() {
+            let audio = document.getElementById('bgMusic');
+            audio.play().catch(error => {
+                console.log("Autoplay blocked. Please interact with the page first.");
+            });
+        }
+
+        function pressPin(num) {
+            if (currentPin.length < 4) {
+                currentPin += num;
+                document.getElementById('pin-display').innerText = "*".repeat(currentPin.length);
+                document.getElementById('pin-status').innerText = "";
+            }
+            
+            if(currentPin.length === 4) {
+                if(currentPin === targetPin) {
+                    document.getElementById('pin-status').innerText = "✓ PIN BENAR!";
+                    document.getElementById('pin-status').style.color = "#27ae60";
+                    setTimeout(() => {
+                        goToPage(3);
+                    }, 500);
+                } else {
+                    document.getElementById('pin-status').innerText = "✗ SALAH PASSWORD";
+                    document.getElementById('pin-status').style.color = "#c0392b";
+                    currentPin = "";
+                    setTimeout(() => {
+                        document.getElementById('pin-display').innerText = "";
+                    }, 500);
+                    setTimeout(() => {
+                        document.getElementById('pin-status').innerText = "";
+                    }, 2000);
+                }
+            }
+        }
+
+        function openLetter() {
+            document.getElementById('envelope').style.display = 'none';
+            document.getElementById('letter-content').style.display = 'block';
+            document.getElementById('backLetter').style.display = 'block';
+        }
+
+        function closeLetter() {
+            document.getElementById('envelope').style.display = 'block';
+            document.getElementById('letter-content').style.display = 'none';
+            document.getElementById('backLetter').style.display = 'none';
+        }
+
+        function blowCandle() {
+            if (hasBlownCandle) return;
+            hasBlownCandle = true;
+
+            document.getElementById('cake').classList.add('blown');
+            
+            var duration = 4 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+              confetti({
+                particleCount: 8,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ['#ff1493', '#ffb6c1', '#ffc0cb', '#ffffff']
+              });
+              confetti({
+                particleCount: 8,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ['#ff1493', '#ffb6c1', '#ffc0cb', '#ffffff']
+              });
+              confetti({
+                particleCount: 5,
+                angle: 90,
+                spread: 45,
+                origin: { x: 0.5, y: 0.3 },
+                colors: ['#ffb6d9', '#ffc0d9', '#ffe0ec', '#ffffff']
+              });
+
+              if (Date.now() < end) {
+                requestAnimationFrame(frame);
+              }
+            }());
+        }
+
+        function resetAll() {
+            currentPin = "";
+            hasBlownCandle = false;
+            document.getElementById('cake').classList.remove('blown');
+            closeLetter();
+            document.getElementById('pin-display').innerText = "";
+            document.getElementById('pin-status').innerText = "";
+        }
+
+        // Start music on first user interaction
+        document.addEventListener('click', function() {
+            playMusic();
+        }, { once: true });
+    </script>
+</body>
+</html>
